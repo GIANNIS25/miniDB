@@ -61,13 +61,13 @@ def create_query_plan(query, keywords, action):
 
 
     for i in range(len(kw_in_query)-1):
-        dic[kw_in_query[i]] = ' '.join(ql[kw_positions[i]+1:kw_positions[i+1]])
+        dic[kw_in_query[i]] = ' '.join(ql[kw_positions[i]+1:kw_positions[i+1]]).removesuffix(' order').removesuffix(' group')
 
     if action=='select':
         dic = evaluate_from_clause(dic)
         
         if dic['order by'] is not None:
-            dic['from'] = dic['from'].removesuffix(' order')
+            dic['from'] = dic['from']
             if 'desc' in dic['order by']:
                 dic['desc'] = True
             else:
@@ -154,7 +154,7 @@ def interpret(query):
                      'import': ['import', 'from'],
                      'export': ['export', 'to'],
                      'insert into': ['insert into', 'values'],
-                     'select': ['select', 'from', 'where', 'order by', 'top'],
+                     'select': ['select', 'from', 'where','group by','having', 'order by', 'top'],
                      'lock table': ['lock table', 'mode'],
                      'unlock table': ['unlock table', 'force'],
                      'delete from': ['delete from', 'where'],
